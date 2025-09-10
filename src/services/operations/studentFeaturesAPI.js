@@ -23,8 +23,7 @@ function loadScript(src) {
     })
 }
 
-export const buyCourse = async (token, courses, userDetails, navigate, dispatch,)=> {
-
+export const buyCourse = async (token, courses, userDetails, navigate, dispatch) => {
     const toastId = toast.loading("Loading...");
 
     try {
@@ -47,8 +46,11 @@ export const buyCourse = async (token, courses, userDetails, navigate, dispatch,
 
         console.log("Order Initialized, printing order response", orderResponse);
 
+        // Add console.log here to check if key is loaded
+        console.log("RAZORPAY KEY:", process.env.REACT_APP_RAZORPAY_KEY);
+
         const options = {
-            key: process.env.RAZORPAY_KEY,
+            key: process.env.REACT_APP_RAZORPAY_KEY,
             currency: orderResponse.data.message.currency,
             amount: `${orderResponse.data.message.amount}`,
             order_id:orderResponse.data.message.id,
@@ -66,7 +68,6 @@ export const buyCourse = async (token, courses, userDetails, navigate, dispatch,
             }  
         }
 
-        // Open the modal using options, as order is initialized => payment will be done =>  Payment done mail => verificationPayment => course successfully enrolled mail sent
         const paymentObject = new window.Razorpay(options);
         paymentObject.open();
         paymentObject.on("payment.failed", (response)=> {
@@ -80,6 +81,7 @@ export const buyCourse = async (token, courses, userDetails, navigate, dispatch,
 
     toast.dismiss(toastId)
 }
+
 
 async function sendPaymentSuccessEmail(response, amount, token) {
     try {
